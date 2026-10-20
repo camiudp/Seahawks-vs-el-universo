@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seahawks vs. El Universo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%88%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Correlaciones espurias entre los resultados de los Seattle Seahawks y cosas que no tienen absolutamente nada que ver: nieve global, el precio del bitcoin, lanzamientos de cohetes y la luna.">
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-win:     #2a78d6;
+    --series-loss:    #e34948;
+    --series-snow:    #1baf7a;
+    --series-btc:     #eb6834;
+    --series-launch:  #6250d6;
+    --series-moon:    #eda100;
+    --success-text:   #006300;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page-plane:     #0d0d0d;
+      --text-primary:   #f0efec;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --series-win:     #3987e5;
+      --series-loss:    #e66767;
+      --series-snow:    #199e70;
+      --series-btc:     #d95926;
+      --series-launch:  #9085e9;
+      --series-moon:    #c98500;
+      --success-text:   #0ca30c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page-plane:     #0d0d0d;
+    --text-primary:   #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --series-win:     #3987e5;
+    --series-loss:    #e66767;
+    --series-snow:    #199e70;
+    --series-btc:     #d95926;
+    --series-launch:  #9085e9;
+    --series-moon:    #c98500;
+    --success-text:   #0ca30c;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  body { -webkit-font-smoothing: antialiased; }
+
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 16px 80px; }
+
+  header.hero {
+    padding: 56px 16px 32px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  header.hero h1 {
+    font-size: clamp(28px, 6vw, 44px);
+    line-height: 1.1;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  header.hero .sub {
+    color: var(--text-secondary);
+    font-size: 17px;
+    max-width: 640px;
+    margin: 0 auto 18px;
+    line-height: 1.5;
+  }
+  .badge-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .badge {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--text-secondary);
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 12px;
+  }
+
+  section.intro {
+    margin-bottom: 44px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  section.intro p { margin: 0 0 14px; }
+  section.intro strong { color: var(--text-primary); }
+
+  .record-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 24px 0 44px;
+  }
+  .record-tile {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 8px;
+    text-align: center;
+  }
+  .record-tile .yr { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+  .record-tile .rec {
+    font-size: 22px; font-weight: 700; margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  h2.section-title {
+    font-size: 23px;
+    margin: 0 0 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  h2.section-title .tag {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--series-tag, var(--text-secondary));
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+  }
+  .metric-sub {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0 0 18px;
+    max-width: 680px;
+  }
+  .metric-section { margin-bottom: 56px; }
+
+  .chart-stack {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px 10px;
+  }
+  .chart-row { position: relative; }
+  .chart-row + .chart-row { margin-top: 2px; border-top: 1px dashed var(--gridline); padding-top: 8px; }
+  .chart-row .chart-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  canvas { max-width: 100%; }
+
+  .stat-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    flex: 1 1 220px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .stat-card .k { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .stat-card .v { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat-card .v small { font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+
+  .verdict {
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    background: var(--surface-1);
+    border-left: 3px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 0 10px 10px 0;
+  }
+  .verdict strong { color: var(--text-primary); }
+
+  .legend-inline { display: flex; gap: 14px; font-size: 12px; color: var(--text-secondary); margin-top: 10px; flex-wrap: wrap; }
+  .legend-inline .dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; }
+
+  .ranking {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 56px;
+  }
+  .ranking ol { margin: 0; padding-left: 22px; }
+  .ranking li { margin-bottom: 10px; line-height: 1.5; }
+  .ranking .r { font-variant-numeric: tabular-nums; font-weight: 700; }
+
+  details.table-view { margin-bottom: 56px; }
+  details.table-view summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 12px 0;
+    color: var(--text-primary);
+  }
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+  table.data-table th, table.data-table td {
+    padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--gridline);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  table.data-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+  table.data-table tr:last-child td { border-bottom: none; }
+  .w-pill, .l-pill { display: inline-block; font-weight: 700; font-size: 11px; border-radius: 5px; padding: 1px 6px; }
+  .w-pill { color: var(--series-win); background: color-mix(in srgb, var(--series-win) 15%, transparent); }
+  .l-pill { color: var(--series-loss); background: color-mix(in srgb, var(--series-loss) 15%, transparent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  footer p { margin: 0 0 10px; }
+  footer a { color: var(--text-secondary); }
+  footer .sources { margin-top: 16px; }
+  footer .sources summary { cursor: pointer; color: var(--text-secondary); font-size: 13px; }
+  footer ul { margin: 8px 0 0; padding-left: 18px; }
+
+  @media (max-width: 560px) {
+    .record-row { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .record-tile { padding: 10px 4px; }
+    .record-tile .rec { font-size: 17px; }
+    header.hero { padding: 36px 16px 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>Seahawks vs. el Universo 🏈🌌</h1>
+    <p class="sub">
+      85 partidos de los Seattle Seahawks (temporadas 2021&ndash;2025) cruzados
+      contra cuatro cosas que, objetivamente, no tienen nada que ver con el
+      fútbol americano: la nieve del hemisferio norte, el precio del bitcoin,
+      los lanzamientos de cohetes y la fase de la luna. Spoiler: la
+      correlación no implica causalidad. Pero mira los gráficos igual.
+    </p>
+    <div class="badge-row">
+      <span class="badge">Datos reales</span>
+      <span class="badge">Correlaciones espurias a propósito</span>
+      <span class="badge">0% ciencia seria</span>
+    </div>
+  </header>
+
+  <section class="intro">
+    <p>
+      Esto es un homenaje al clásico sitio
+      <a href="https://www.tylervigen.com/spurious-correlations" target="_blank" rel="noopener">Spurious Correlations</a>,
+      que muestra que si cruzas suficientes series de tiempo, siempre vas a
+      encontrar un par que se mueve "igual" por pura casualidad &mdash; sin que
+      una cause la otra. Aquí hicimos lo mismo, pero con los Seahawks como
+      protagonistas.
+    </p>
+    <p>
+      Todos los números de abajo son reales (ver fuentes al final), pero los
+      "patrones" son ruido estadístico disfrazado de destino. Tómalo con el
+      mismo humor con el que lo hicimos nosotros.
+    </p>
+  </section>
+
+  <div class="record-row" id="record-row"></div>
+
+  <!-- SNOW -->
+  <section class="metric-section" id="sec-snow">
+    <h2 class="section-title">❄️ Nieve del hemisferio norte <span class="tag" style="--series-tag: var(--series-snow); color: var(--series-snow);">clima global</span></h2>
+    <p class="metric-sub">
+      Cobertura de nieve del hemisferio norte (millones de km²), medida
+      mensualmente por el <em>Rutgers Global Snow Lab</em>. Cada partido usa el
+      valor del mes en que se jugó.
+    </p>
+    <div class="chart-stack">
+      <div class="chart-row">
+        <div class="chart-label">Margen de los Seahawks por partido</div>
+        <canvas id="chart-snow-margin" height="110"></canvas>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Nieve NH ese mes (millones km²)</div>
+        <canvas id="chart-snow-metric" height="110"></canvas>
+      </div>
+    </div>
+    <div class="stat-row" id="stat-snow"></div>
+    <div class="verdict" id="verdict-snow"></div>
+  </section>
+
+  <!-- BITCOIN -->
+  <section class="metric-section" id="sec-btc">
+    <h2 class="section-title">₿ Precio del bitcoin <span class="tag" style="--series-tag: var(--series-btc); color: var(--series-btc);">económico</span></h2>
+    <p class="metric-sub">
+      Precio de bitcoin en USD al primer día de cada mes
+      (fuente: officialdata.org). Cada partido usa el precio del mes en que se jugó.
+    </p>
+    <div class="chart-stack">
+      <div class="chart-row">
+        <div class="chart-label">Margen de los Seahawks por partido</div>
+        <canvas id="chart-btc-margin" height="110"></canvas>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Precio BTC ese mes (USD)</div>
+        <canvas id="chart-btc-metric" height="110"></canvas>
+      </div>
+    </div>
+    <div class="stat-row" id="stat-btc"></div>
+    <div class="verdict" id="verdict-btc"></div>
+  </section>
+
+  <!-- ROCKETS -->
+  <section class="metric-section" id="sec-launch">
+    <h2 class="section-title">🚀 Lanzamientos de cohetes <span class="tag" style="--series-tag: var(--series-launch); color: var(--series-launch);">sorpréndeme</span></h2>
+    <p class="metric-sub">
+      Cantidad de lanzamientos de cohetes en todo el mundo ese mes
+      (fuente: Launch Library 2 / The Space Devs). El ejemplo original del
+      pedido &mdash; aquí está, con datos de verdad.
+    </p>
+    <div class="chart-stack">
+      <div class="chart-row">
+        <div class="chart-label">Margen de los Seahawks por partido</div>
+        <canvas id="chart-launch-margin" height="110"></canvas>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Lanzamientos globales ese mes</div>
+        <canvas id="chart-launch-metric" height="110"></canvas>
+      </div>
+    </div>
+    <div class="stat-row" id="stat-launch"></div>
+    <div class="verdict" id="verdict-launch"></div>
+  </section>
+
+  <!-- MOON -->
+  <section class="metric-section" id="sec-moon">
+    <h2 class="section-title">🌕 Iluminación de la luna <span class="tag" style="--series-tag: var(--series-moon); color: var(--series-moon);">sorpréndeme</span></h2>
+    <p class="metric-sub">
+      Porcentaje del disco lunar iluminado el día exacto de cada partido
+      (calculado localmente, no depende de ninguna API). El único dato con
+      granularidad por partido en vez de por mes.
+    </p>
+    <div class="chart-stack">
+      <div class="chart-row">
+        <div class="chart-label">Margen de los Seahawks por partido</div>
+        <canvas id="chart-moon-margin" height="110"></canvas>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">% de luna iluminada ese día</div>
+        <canvas id="chart-moon-metric" height="110"></canvas>
+      </div>
+    </div>
+    <div class="stat-row" id="stat-moon"></div>
+    <div class="verdict" id="verdict-moon"></div>
+  </section>
+
+  <section class="ranking">
+    <h2 class="section-title" style="margin-bottom:14px;">🏆 El ranking de la casualidad</h2>
+    <ol id="ranking-list"></ol>
+  </section>
+
+  <details class="table-view">
+    <summary>Ver los 85 partidos completos (tabla)</summary>
+    <div class="tbl-wrap">
+      <table class="data-table" id="full-table">
+        <thead>
+          <tr>
+            <th>Temp.</th><th>Sem.</th><th>Fecha</th><th>Rival</th><th>Res.</th>
+            <th>Marcador</th><th>Nieve NH (M km²)</th><th>BTC (USD)</th>
+            <th>Lanzamientos</th><th>Luna %</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </details>
+
+  <footer>
+    <p>
+      <strong>Correlación no implica causalidad.</strong> ...pero si alguna vez
+      los Seahawks pierden en una semana con poca nieve, bitcoin cayendo,
+      pocos lanzamientos y luna nueva, al menos sabremos que el universo
+      entero se puso de acuerdo.
+    </p>
+    <details class="sources">
+      <summary>Fuentes y metodología</summary>
+      <ul>
+        <li>Resultados de los Seahawks: artículos de temporada de Wikipedia (en.wikipedia.org), verificados contra el récord final de cada temporada.</li>
+        <li>Nieve del hemisferio norte: Rutgers University Global Snow Lab (climate.rutgers.edu/snowcover), cobertura mensual.</li>
+        <li>Precio de bitcoin: officialdata.org/bitcoin-price, precio al primer día de cada mes.</li>
+        <li>Lanzamientos de cohetes: Launch Library 2 API, The Space Devs (ll.thespacedevs.com), conteo mensual global.</li>
+        <li>Iluminación lunar: calculada localmente con la aproximación estándar del mes sinódico (29.53058867 días) &mdash; sin API externa.</li>
+        <li>Los valores de nieve, bitcoin y lanzamientos son mensuales y se repiten para todos los partidos del mismo mes; la luna es el único dato calculado por fecha exacta de partido.</li>
+      </ul>
+    </details>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
